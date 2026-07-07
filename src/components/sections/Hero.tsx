@@ -1,7 +1,7 @@
 import { profile } from '@/data/profile';
 import { socials } from '@/data/socials';
 import { useRotatingIndex } from '@/hooks/useRotatingIndex';
-import { useParallax } from '@/hooks/useParallax';
+import { useMouseParallax } from '@/hooks/useMouseParallax';
 import { scrollToId } from '@/lib/scroll';
 import { AuroraBackground } from '@/components/animations/AuroraBackground';
 import { Magnetic } from '@/components/animations/Magnetic';
@@ -10,21 +10,66 @@ import { StaggerText } from '@/components/animations/StaggerText';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 
+/* Floating glass badges orbiting the hero (desktop only). */
+const FLOATING_TECH = [
+  { label: 'React.js', className: 'right-[14%] top-[24%] animate-float' },
+  { label: 'Next.js', className: 'right-[6%] top-[48%] animate-float-slow [animation-delay:-4s]' },
+  { label: 'Tailwind CSS', className: 'right-[20%] bottom-[22%] animate-float [animation-delay:-2.5s]' },
+];
+
 export function Hero() {
   const roleIndex = useRotatingIndex(profile.roles.length);
-  const orbRef = useParallax<HTMLDivElement>(-0.12);
+  const nearLayer = useMouseParallax<HTMLDivElement>(26);
+  const farLayer = useMouseParallax<HTMLDivElement>(-14);
 
   return (
     <section id="home" aria-label="Introduction" className="relative flex min-h-svh flex-col justify-center overflow-hidden">
       <AuroraBackground grid />
 
-      {/* floating decorative elements */}
-      <div ref={orbRef} aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute right-[12%] top-[22%] h-2 w-2 rounded-full bg-accent-cyan/70 animate-float" />
-        <div className="absolute left-[10%] top-[58%] h-3 w-3 rounded-full bg-accent-violet/50 animate-float-slow" />
-        <div className="absolute right-[22%] bottom-[24%] h-1.5 w-1.5 rounded-full bg-accent-blue/70 animate-float [animation-delay:-3s]" />
-        <div className="absolute left-[20%] top-[26%] h-16 w-16 rounded-2xl border border-line/60 rotate-12 animate-float-slow [animation-delay:-5s]" />
-        <div className="absolute right-[8%] bottom-[38%] h-20 w-20 rounded-full border border-line/40 animate-float [animation-delay:-2s]" />
+      {/* light beams sweeping down the grid lines */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <span className="absolute left-[18%] top-0 h-40 w-px bg-gradient-to-b from-transparent via-accent-cyan/50 to-transparent animate-beam" />
+        <span className="absolute left-[52%] top-0 h-52 w-px bg-gradient-to-b from-transparent via-accent-violet/50 to-transparent animate-beam [animation-delay:-2.4s] [animation-duration:9s]" />
+        <span className="absolute left-[81%] top-0 h-36 w-px bg-gradient-to-b from-transparent via-accent-blue/50 to-transparent animate-beam [animation-delay:-5s] [animation-duration:8s]" />
+      </div>
+
+      {/* rotating gradient arc anchored off the right edge */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-56 top-1/2 hidden h-[44rem] w-[44rem] -translate-y-1/2 rounded-full opacity-40 animate-spin-slow lg:block"
+        style={{
+          background:
+            'conic-gradient(from 0deg, transparent 0deg, rgb(109 124 255 / 0.55) 40deg, rgb(34 211 238 / 0.4) 80deg, transparent 130deg)',
+          maskImage: 'radial-gradient(closest-side, transparent calc(100% - 2px), black calc(100% - 1px))',
+          WebkitMaskImage: 'radial-gradient(closest-side, transparent calc(100% - 2px), black calc(100% - 1px))',
+        }}
+      />
+
+      {/* far depth layer — drifts against the cursor */}
+      <div ref={farLayer} aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <span className="absolute left-[20%] top-[26%] h-16 w-16 rounded-2xl border border-line/60 rotate-12 animate-float-slow [animation-delay:-5s]" />
+        <span className="absolute right-[8%] bottom-[38%] h-20 w-20 rounded-full border border-line/40 animate-float [animation-delay:-2s]" />
+        <span className="absolute left-[8%] top-[16%] h-1 w-1 rounded-full bg-white/50 animate-twinkle" />
+        <span className="absolute left-[38%] top-[12%] h-1.5 w-1.5 rounded-full bg-accent-cyan/60 animate-twinkle [animation-delay:-1.2s]" />
+        <span className="absolute right-[30%] top-[20%] h-1 w-1 rounded-full bg-white/40 animate-twinkle [animation-delay:-2.1s]" />
+        <span className="absolute left-[14%] bottom-[20%] h-1 w-1 rounded-full bg-accent-violet/60 animate-twinkle [animation-delay:-0.6s]" />
+        <span className="absolute right-[12%] bottom-[16%] h-1.5 w-1.5 rounded-full bg-white/30 animate-twinkle [animation-delay:-2.8s]" />
+      </div>
+
+      {/* near depth layer — drifts with the cursor */}
+      <div ref={nearLayer} aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <span className="absolute right-[12%] top-[22%] h-2 w-2 rounded-full bg-accent-cyan/70 animate-float" />
+        <span className="absolute left-[10%] top-[58%] h-3 w-3 rounded-full bg-accent-violet/50 animate-float-slow" />
+        <span className="absolute right-[22%] bottom-[24%] h-1.5 w-1.5 rounded-full bg-accent-blue/70 animate-float [animation-delay:-3s]" />
+        {FLOATING_TECH.map((tech) => (
+          <span
+            key={tech.label}
+            className={`absolute hidden items-center gap-2 rounded-full glass px-4 py-2 font-display text-xs font-medium text-muted shadow-[0_8px_32px_rgb(0_0_0/0.4)] xl:flex ${tech.className}`}
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-accent-blue to-accent-cyan" />
+            {tech.label}
+          </span>
+        ))}
       </div>
 
       <div className="relative mx-auto w-full max-w-6xl px-6 pt-28 pb-20">
@@ -38,10 +83,16 @@ export function Hero() {
           </span>
         </Reveal>
 
-        <h1 className="font-display font-semibold tracking-tight">
+        <h1 className="relative font-display font-semibold tracking-tight">
+          {/* soft glow bloom behind the headline */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -left-24 -top-16 h-72 w-72 rounded-full bg-accent-violet/15 blur-[100px] animate-pulse-soft"
+          />
           <StaggerText
+            mode="chars"
             text={`Hi, I’m ${profile.name}.`}
-            className="block text-4xl leading-[1.06] text-white sm:text-6xl md:text-7xl lg:text-8xl"
+            className="relative block text-4xl leading-[1.06] text-white sm:text-6xl md:text-7xl lg:text-8xl"
           />
           <span className="mt-3 block text-4xl leading-[1.06] sm:text-6xl md:text-7xl lg:text-8xl" aria-live="off">
             {/* rotating role ticker */}
@@ -118,6 +169,9 @@ export function Hero() {
           <span className="h-2 w-1 rounded-full bg-current animate-scroll-dot" />
         </button>
       </div>
+
+      {/* bottom fade into the next section */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-bg" />
     </section>
   );
 }

@@ -35,6 +35,8 @@
   --animate-pulse-soft: pulse-soft 3.2s ease-in-out infinite;
   --animate-scroll-dot: scroll-dot 2.2s ease-in-out infinite;
   --animate-gradient-x: gradient-x 8s ease infinite;
+  --animate-beam: beam 7s linear infinite;
+  --animate-twinkle: twinkle 3.5s ease-in-out infinite;
 
   @keyframes aurora {
     0% {
@@ -110,6 +112,34 @@
     }
     50% {
       background-position: 100% 50%;
+    }
+  }
+  /* light streak falling down a grid line */
+  @keyframes beam {
+    0% {
+      transform: translateY(-12rem);
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    75% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(110vh);
+      opacity: 0;
+    }
+  }
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.15);
     }
   }
 }

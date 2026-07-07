@@ -10,15 +10,14 @@ import { cn } from '@/lib/utils';
 const OBSERVED_IDS = NAV_LINKS.map((l) => l.id);
 
 /**
- * Floating glass navbar: hides on scroll down, reveals on scroll up,
- * highlights the active section, and expands into a mobile overlay menu.
+ * Floating glass navbar: always visible, gains a glass surface once the
+ * page scrolls, highlights the active section, and expands into a mobile
+ * overlay menu.
  */
 export function Navbar() {
-  const { direction, atTop } = useScrollDirection();
+  const { atTop } = useScrollDirection();
   const active = useActiveSection(OBSERVED_IDS);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const hidden = direction === 'down' && !atTop && !menuOpen;
 
   // Lock page scroll while the mobile menu is open
   useEffect(() => {
@@ -35,12 +34,8 @@ export function Navbar() {
 
   return (
     <>
-      <header
-        className={cn(
-          'fixed inset-x-0 top-4 z-50 flex justify-center px-4 transition-all duration-500',
-          hidden ? '-translate-y-24 opacity-0' : 'translate-y-0 opacity-100',
-        )}
-      >
+      <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
+
         <nav
           aria-label="Primary"
           className={cn(
