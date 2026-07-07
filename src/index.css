@@ -265,6 +265,12 @@
   background-size: 160px 160px;
 }
 
+/* huge outlined ghost lettering (fill transparent, hairline stroke) */
+@utility text-stroke-ghost {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(255 255 255 / 0.07);
+}
+
 /* shimmering placeholder surface for empty/demo content */
 @utility shimmer-surface {
   background: linear-gradient(
@@ -275,4 +281,31 @@
   );
   background-size: 200% 100%;
   animation: var(--animate-shimmer);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Scroll-driven animations (CSS scroll timelines).
+   Progressive enhancement: Chromium/Edge get them, others see
+   the static state. Keep inside @supports so nothing breaks.
+   ───────────────────────────────────────────────────────────── */
+@supports (animation-timeline: view()) {
+  /* media pans vertically while its card crosses the viewport */
+  .view-pan {
+    animation: view-pan linear both;
+    animation-timeline: view();
+  }
+  @keyframes view-pan {
+    from {
+      transform: translateY(5%) scale(1.12);
+    }
+    to {
+      transform: translateY(-5%) scale(1.12);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .view-pan {
+      animation: none;
+    }
+  }
 }

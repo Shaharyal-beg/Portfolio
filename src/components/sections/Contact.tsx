@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { profile } from '@/data/profile';
 import { socials } from '@/data/socials';
 import { AuroraBackground } from '@/components/animations/AuroraBackground';
+import { GhostText } from '@/components/animations/GhostText';
 import { Magnetic } from '@/components/animations/Magnetic';
 import { Reveal } from '@/components/animations/Reveal';
 import { StaggerText } from '@/components/animations/StaggerText';
@@ -24,6 +25,7 @@ export function Contact() {
   return (
     <section id="contact" aria-label="Contact" className="relative overflow-hidden py-28 md:py-40">
       <AuroraBackground />
+      <GhostText text="Get in touch" className="top-10" travel={-14} />
 
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         <Reveal y={14}>
